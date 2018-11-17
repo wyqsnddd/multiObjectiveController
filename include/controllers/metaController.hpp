@@ -40,7 +40,9 @@ class metaController{
 		int readControlMode() const{
 			return controlMode_;	
 		}
-
+		dart::dynamics::SkeletonPtr getRobot()const{
+			return robotPtr_;
+		}
 	protected:
 		bool enabled_;
 		dart::dynamics::SkeletonPtr robotPtr_;
