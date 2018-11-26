@@ -16,6 +16,7 @@
 # include <manipulatorConstraints/jointPositionLimitConstraint.hpp>
 # include <manipulatorConstraints/jointVelocityLimitConstraint.hpp>
 # include <manipulatorConstraints/jointAccelerationLimitConstraint.hpp>
+# include <manipulatorConstraints/jointTorqueLimitConstraint.hpp>
 
 # include <utils/utils.hpp>
 
