@@ -50,6 +50,17 @@ class jointTorqueLimitConstraint : public dart::optimizer::Function {
 		double eval(const Eigen::VectorXd& _x ) const override{
 			Eigen::VectorXd Cg = robotPtr_->getCoriolisAndGravityForces();
 
+			/* The reverse does not work*/
+			/*
+			Eigen::VectorXd boundVector(robotPtr_->getNumDofs());
+			boundVector<< bound_ , bound_, bound_, bound_, bound_, bound_; 
+
+			if(lowerBoundIndicator_){
+				return -_x[jointNumber_]  + (robotPtr_->getInvMassMatrix()*(boundVector - robotPtr_->getCoriolisAndGravityForces() ))(jointNumber_);
+			}else{
+				return  _x[jointNumber_] - (robotPtr_->getInvMassMatrix()*(boundVector - robotPtr_->getCoriolisAndGravityForces() ))(jointNumber_);
+			}
+			*/
 			if(lowerBoundIndicator_){
 				return (- robotPtr_->getMassMatrix().block<1,6>(jointNumber_, 0)*_x)  + (bound_ - robotPtr_->getCoriolisAndGravityForces()[jointNumber_]);
 			}else{
@@ -62,6 +73,7 @@ class jointTorqueLimitConstraint : public dart::optimizer::Function {
 			}else{
 				_grad = robotPtr_->getMassMatrix().block<1,6>(jointNumber_, 0);
 			}
+			//_grad = grad_;
 		}
 	private:
 
