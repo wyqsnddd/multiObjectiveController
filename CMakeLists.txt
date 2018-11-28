@@ -204,7 +204,7 @@ endif(DART_VERBOSE)
 # Add control libraries 
 #===============================================================================
 add_compile_options(-std=c++11)
-#find_package(DART 7.0.0 REQUIRED COMPONENTS io-urdf gui-osg CONFIG)
+# find_package(DART 7.0.0 REQUIRED COMPONENTS io-urdf gui-osg dart-opimizer CONFIG)
 
 file(GLOB lib_srcs "include/*" "src/*.cpp")
 find_package(NLOPT)
@@ -214,7 +214,7 @@ include_directories(${NLOPT_INCLUDE_DIRS})
 include_directories("include")
 add_library(${PROJECT_NAME} ${lib_srcs})
 set_target_properties(${PROJECT_NAME}  PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(${PROJECT_NAME} ${DART_LIBRARIES} ${NLOPT_LIBRARIES} dart-optimizer-ipopt ) 
+target_link_libraries(${PROJECT_NAME} ${DART_LIBRARIES} ${NLOPT_LIBRARIES} dart-optimizer-nlopt ) 
 #===============================================================================
 # Add sub-directories
 #===============================================================================

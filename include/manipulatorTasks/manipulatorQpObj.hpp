@@ -18,6 +18,7 @@
 # include <manipulatorTasks/metaManipulatorTask.hpp>
 # include <manipulatorTasks/positionTask.hpp>
 # include <manipulatorTasks/linearVelocityTask.hpp>
+# include <manipulatorTasks/orientationTask.hpp>
 # include <utils/utils.hpp>
 
 

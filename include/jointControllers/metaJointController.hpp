@@ -31,7 +31,7 @@ class metaJointController{
 		virtual bool update(const Eigen::VectorXd &inputAcc){
 			robotPtr_->setForces(computedTorque_(inputAcc));
 		}
-	private:
+	protected:
 
 		Eigen::VectorXd computedTorque_(const Eigen::VectorXd &acc);
 
