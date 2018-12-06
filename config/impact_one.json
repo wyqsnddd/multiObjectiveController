@@ -1,0 +1,109 @@
+{
+	"jointControlConfiguration":{
+		"controlMode": 0,
+		"computedTorqueControl":{
+			"K_v":2.0,
+			"K_p":10.0
+		},
+		"jointVelocityControl":{
+			"K_v": 2.0, 
+			"K_p": 10.0
+		},
+		"jointPositionControl":{ 
+			"K_v": 2.0, 
+			"K_p": 10.0 }
+	},
+	"simulationWorldParameters":{
+		"box_bottom_friction_coeff": 0.1,
+		"box_coarse_surface_friction_coeff": 1.0,
+		"wall_friction_coeff": 0.8,
+		"wall_restitution_coeff": 0.3
+	},
+	"jointVelocityController":{
+		"K_v": 1.0 
+	},
+	"impactEstimator":{
+		"enabled": true,
+		"bodyLinkNumber": -1
+	},    
+	"jointPositionController":{
+		"K_v": 1.0,
+		"K_p": 1.0 
+	},
+	"qpController":{ 
+		"jointUnitWeight": 5.0,
+		"constraintForceAware": false,
+		"showProgress": false,
+		"jointLimits":{
+			"dt": 0.01
+		},
+		"torqueLimits":{
+			"upper": [50.0, 50.0, 50.0, 50.0, 50.0, 50.0],
+			"lower": [-50.0, -50.0, -50.0, -50.0, -50.0, -50.0 ]
+		},
+		"accelerationLimits":{
+			"upper": [4.3633, 4.3633, 4.3633, 7.33, 10.295, 10.47],
+			"lower": [-4.3633, -4.3633, -4.3633, -7.33, -10.295, -10.47]
+		},
+		"positionTask":{
+			"enabled": true,
+			"taskWeight": 50.0,
+			"endEffectorName": "palm",
+			"axis_selection":[0.0, 1.0, 1.0],
+			"setPoint_still":[0.42, 0.0, 0.693],
+			"setPoint_fake":[0.1, 0.2, 0.1],
+			"setPoint_fake":[0.12, 0.2, 0.2],
+			"setPoint":[0.42, 0.0, 0.693],
+			"Comment": "-1: end-effector, 4: elbow",
+			"Kp": 12.0,
+			"Kd": 5.0
+		},
+		"orientationTask":{
+			"enabled": false,
+			"endEffectorName": "palm",
+			"stayStill": false,
+			"taskWeight": 50.0,
+			"quaternion_scalar_weight": 0.0,
+			"axis_selection":[1.0, 1.0, 1.0],
+			"setPoint-fake":[-0.70738827, 0, -0.70682518, 0.0],
+			"setPoint-fake":[-0.70738827, 0.0, -0.70682518, 0.0],
+			"setPoint":[1.0,  0.0, 0.0, 0.0],
+			"bodyLinkNumber": -1,
+			"Comment": "-1: end-effector, 4: elbow",
+			"Kp": 100.0,
+			"Kd": 10.0
+		},
+		"admittanceTask":{
+			"enabled": false,
+			"taskWeight": 100.0,
+			"axis_selection":[1.0, 1.0, 1.0],
+			"desiredForce": [10.0, 0.0, 0.0],
+			"desiredVelocity": [0.0, 0.0, 0.0],
+			"bodyLinkNumber": -1,
+			"Kf": 100.0,
+			"Ki": 100.0,
+			"Kd": 100.0
+		},
+		"velocityTask":{
+			"enabled": true,
+			"taskWeight": 50.0,
+			"endEffectorName": "palm",
+			"axis_selection":[1.0, 0.0, 0.0],
+			"desiredVelocity": [0.05, 0.0, 0.0],
+			"Kp": 30.0,
+			"Kv": 3.0
+		},
+		"trajectoryTask":{
+			"enabled": false,
+			"taskWeight": 10000.0,
+			"setPoint":[0.1, 0.2, 0.1],
+			"end-effector-frame": true,
+			"bodyLinkNumber": -1,
+			"Kp": 2000.0,
+			"Kd": 2000.0,
+			"sampleNumber": 100,
+			"way-points":[[0.0, -0.0, -0.02], [0.03, -0.01, -0.04], [0.06, -0.02, -0.06], [0.09, -0.02, -0.08], [0.12, -0.02, -0.1], [0.12, -0.02, -0.12],[0.12, -0.02, -0.14] ],
+			"time-knots":[0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.22]
+		}
+	}
+} 
