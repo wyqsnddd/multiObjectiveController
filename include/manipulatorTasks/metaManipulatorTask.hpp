@@ -4,7 +4,6 @@
 # include <vector>
 # include <Eigen/Dense>
 # include <dart/dart.hpp>
-
 # include <utils/utils.hpp>
 
 namespace pt = boost::property_tree;
@@ -12,7 +11,14 @@ namespace pt = boost::property_tree;
 class metaManipulatorTask{
 	public:
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-		metaManipulatorTask( const std::string &endEffectorName, const Eigen::Vector3d & goal, const dart::dynamics::SkeletonPtr& skelPtr, const pt::ptree configurationDataTree, double weight, double Kv, double Kp, Eigen::Vector3d selectionV  ){
+		metaManipulatorTask( const std::string &endEffectorName,
+				     const Eigen::Vector3d & goal,
+				     const dart::dynamics::SkeletonPtr& skelPtr,
+				     const pt::ptree configurationDataTree,
+				     double weight,
+				     double Kv,
+				     double Kp,
+				     Eigen::Vector3d selectionV  ){
 
 			robotPtr_ = skelPtr;
 			assert(robotPtr_!=nullptr);

@@ -12,8 +12,8 @@ void linearVelocityTask::update(){
 	
 	calcError(dx);
 	Eigen::Vector3d error = getError();
-
-
+	
+	
 	std::cout<<"The linear velocity error is: "<< error.transpose()<<std::endl;
 
 	Eigen::Vector3d tempConstant = (dJv + Kp_*Jv)*dq - Kp_*getTarget();

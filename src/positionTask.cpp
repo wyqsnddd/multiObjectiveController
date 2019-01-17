@@ -1,6 +1,4 @@
 # include <manipulatorTasks/positionTask.hpp>
-
-
 void positionTask::update(){
 
 	dart::math::LinearJacobian Jv   = selectionMatrix_*eePtr_->getLinearJacobian();       // 3 x n
