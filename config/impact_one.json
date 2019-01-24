@@ -64,17 +64,13 @@
 			"endEffectorName": "palm",
 			"axis_selection":[0.0, 1.0, 1.0],
 			"admittanceTask":{
-				"axis_selection":[1.0, 1.0, 1.0],
 				"desiredForce": [10.0, 0.0, 0.0],
 				"Kf": 0.05,
 				"Ki": 5.0,
-				"Kd": 0.1,
-				"Kp": 0.5
+				"KD": 0.1
+				"KM": 0.1
 			},
 			"motionTask": {
-				"setPoint_still":[0.42, 0.0, 0.693],
-				"setPoint_fake":[0.1, 0.2, 0.1],
-				"setPoint_fake":[0.12, 0.2, 0.2],
 				"setPoint":[0.42, 0.0, 0.693],
 				"Kp": 12.0,
 				"Kd": 5.0
