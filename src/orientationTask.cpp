@@ -22,7 +22,10 @@ void orientationTask::update(){
 	error_quat(2) = getErrorQuaternion().y();
 	error_quat(3) = getErrorQuaternion().z();
 	*/
-	std::cout<<"The orientation task erros is: "<<error_quat<<std::endl;
+
+	//	std::cout<<"The desired quaternion is: "<<std::endl<<desiredOrientation.w()<<", "<<desiredOrientation.vec().transpose()<<std::endl;
+
+	std::cout<<"The orientation task error is: "<<error_quat<<std::endl;
 
 	Eigen::MatrixXd constant = 0.5*block_one*(angularJac_d + Kv_*angularJac)*dq + Kp_*error_quat;
 

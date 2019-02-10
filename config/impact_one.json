@@ -49,7 +49,7 @@
 			"enabled": true,
 			"taskWeight": 50.0,
 			"endEffectorName": "palm",
-			"axis_selection":[0.0, 1.0, 1.0],
+			"axis_selection":[1.0, 1.0, 1.0],
 			"setPoint_still":[0.42, 0.0, 0.693],
 			"setPoint_fake":[0.1, 0.2, 0.1],
 			"setPoint_fake":[0.12, 0.2, 0.2],
@@ -67,7 +67,7 @@
 				"desiredForce": [10.0, 0.0, 0.0],
 				"Kf": 0.05,
 				"Ki": 5.0,
-				"KD": 0.1
+				"KD": 0.1,
 				"KM": 0.1
 			},
 			"motionTask": {
@@ -77,15 +77,16 @@
 			}
 		},
 		"orientationTask":{
-			"enabled": false,
+			"enabled": true,
 			"endEffectorName": "palm",
-			"stayStill": false,
+			"stayStill": true,
 			"taskWeight": 50.0,
 			"quaternion_scalar_weight": 0.0,
 			"axis_selection":[1.0, 1.0, 1.0],
 			"setPoint-fake":[-0.70738827, 0, -0.70682518, 0.0],
 			"setPoint-fake":[-0.70738827, 0.0, -0.70682518, 0.0],
-			"setPoint":[1.0,  0.0, 0.0, 0.0],
+			"setPoint":[-0.70738827, 0.0, -0.70682518, 0.0],
+			"setPoint-fake":[1.0,  0.0, 0.0, 0.0],
 			"bodyLinkNumber": -1,
 			"Comment": "-1: end-effector, 4: elbow",
 			"Kp": 100.0,
@@ -115,7 +116,7 @@
 			"Kd": 100.0
 		},
 		"velocityTask":{
-			"enabled": true,
+			"enabled": false,
 			"taskWeight": 50.0,
 			"endEffectorName": "palm",
 			"axis_selection":[1.0, 0.0, 0.0],
