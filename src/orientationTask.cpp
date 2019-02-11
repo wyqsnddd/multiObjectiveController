@@ -6,16 +6,18 @@ void orientationTask::update(){
 	Eigen::Quaterniond currentQuat = Eigen::Quaterniond(currentRotation);
 	calcQuatError(currentQuat);
 
-	Eigen::MatrixXd block_one = desiredQuatMatrix_*conjugate_operation_Matrix_*(W_(currentQuat).transpose());
-
+	Eigen::MatrixXd block_one = deleteOperationMatrix_*desiredQuatMatrix_*(W_(currentQuat).transpose());
 
 	dart::math::AngularJacobian angularJac = eePtr_->getAngularJacobian();
+	
 	dart::math::AngularJacobian angularJac_d = eePtr_->getAngularJacobianDeriv();
 	Eigen::VectorXd dq = robotPtr_->getVelocities();
 
-	Eigen::MatrixXd newJacobian = 0.5*block_one*angularJac;
+	// Eigen::MatrixXd newJacobian = 0.5*block_one*angularJac;
+	dart::math::AngularJacobian newJacobian = 0.5*block_one*angularJac;
+	
 	Eigen::Quaterniond tempQuatError = getErrorQuaternion();
-	Eigen::VectorXd error_quat = quatVector(tempQuatError);
+	// Eigen::VectorXd error_quat = quatVector(tempQuatError);
 	/*
 	error_quat(0) = getErrorQuaternion().w();
 	error_quat(1) = getErrorQuaternion().x();
@@ -25,18 +27,37 @@ void orientationTask::update(){
 
 	//	std::cout<<"The desired quaternion is: "<<std::endl<<desiredOrientation.w()<<", "<<desiredOrientation.vec().transpose()<<std::endl;
 
-	std::cout<<"The orientation task error is: "<<error_quat<<std::endl;
 
-	Eigen::MatrixXd constant = 0.5*block_one*(angularJac_d + Kv_*angularJac)*dq + Kp_*error_quat;
+	Eigen::Vector3d constant = 0.5*block_one*(angularJac_d + Kv_*angularJac)*dq + Kp_*tempQuatError.vec();
 
-	newJacobian = quatScalarWeightingMatrix_*newJacobian;
-	constant = quatScalarWeightingMatrix_*constant;
+	// newJacobian = quatScalarWeightingMatrix_*newJacobian;
+	// constant = quatScalarWeightingMatrix_*constant;
+	std::cout<<"The orientation task error is: "<<tempQuatError.vec()<<std::endl;
 
+	// std::cout<<"The angular jacobian  is: "<<std::endl<<angularJac<<", the J_dot is: "<<std::endl<<angularJac_d<<std::endl;
+	// std::cout<<"dq: "<<std::endl<<dq<<std::endl;
+	// std::cout<<"block_one: "<<std::endl<<block_one<<std::endl;
+	// std::cout<<"constant is: "<<std::endl<<constant<<std::endl;
+	// std::cout<<"newJacobian is: "<<std::endl<<newJacobian<<std::endl;
+	
 	objQ_ = taskWeight_*newJacobian.transpose()*newJacobian;
 	objP_ = taskWeight_*2*constant.transpose()*newJacobian;
-	double tempC = 0;
-	tempC = (constant.transpose()*constant)(0);
-	objC_ = taskWeight_*tempC;
+	// std::cout<<"The orientation Q matrix is: "<<std::endl<<objQ_<<", the P vector is: "<<std::endl<<objP_<<std::endl;
+	// objP_ = 2*taskWeight_*constant.transpose()*newJacobian;
+	// std::cout<<"c.T*newjacobian: "<<std::endl<<constant.transpose()*newJacobian <<std::endl;
+	// Eigen::VectorXd tempP = 2*taskWeight_*constant.transpose()*newJacobian;
+	// std::cout<<"tempP is: "<<std::endl<<tempP <<std::endl;
+
+	// objP_ = tempP;
+	// std::cout<<"objP_ is: "<<std::endl<<objP_ <<std::endl;
+	
+	// objQ_ = taskWeight_*Eigen::MatrixXd::Identity(6,6);
+	// Eigen::VectorXd temp;
+	// temp.resize(6);
+	// temp.setZero();
+	// objP_ = temp;
+	objC_ = taskWeight_*constant.transpose()*constant;
+
 
 }
 

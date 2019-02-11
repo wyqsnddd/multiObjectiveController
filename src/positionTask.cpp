@@ -18,7 +18,7 @@ void positionTask::update(){
 	objP_ = taskWeight_*2*tempConstant.transpose()*Jv;
 	objC_ = taskWeight_*tempConstant.transpose()*tempConstant;
 
-// 	std::cout<<"The position Q is: "<< objQ_ <<std::endl;
-// 	std::cout<<"The position P is: "<< objP_<<std::endl;
-//	std::cout<<"The position C is: "<< objC_<<std::endl;
+	// std::cout<<"The position Q is: "<< objQ_ <<std::endl;
+	// std::cout<<"The position P is: "<< objP_<<std::endl;
+	// std::cout<<"The position C is: "<< objC_<<std::endl;
 }

@@ -17,7 +17,7 @@
 		"box_bottom_friction_coeff": 0.1,
 		"box_coarse_surface_friction_coeff": 1.0,
 		"wall_friction_coeff": 0.8,
-		"wall_restitution_coeff": 0.3
+		"wall_restitution_coeff": 0.8
 	},
 	"jointVelocityController":{
 		"K_v": 1.0 
@@ -49,7 +49,7 @@
 			"enabled": true,
 			"taskWeight": 50.0,
 			"endEffectorName": "palm",
-			"axis_selection":[1.0, 1.0, 1.0],
+			"axis_selection":[0.0, 1.0, 1.0],
 			"setPoint_still":[0.42, 0.0, 0.693],
 			"setPoint_fake":[0.1, 0.2, 0.1],
 			"setPoint_fake":[0.12, 0.2, 0.2],
@@ -79,14 +79,13 @@
 		"orientationTask":{
 			"enabled": true,
 			"endEffectorName": "palm",
-			"stayStill": true,
-			"taskWeight": 50.0,
+			"stayStill": false,
+			"taskWeight": 100.0,
 			"quaternion_scalar_weight": 0.0,
 			"axis_selection":[1.0, 1.0, 1.0],
 			"setPoint-fake":[-0.70738827, 0, -0.70682518, 0.0],
-			"setPoint-fake":[-0.70738827, 0.0, -0.70682518, 0.0],
+			"setPoint-EulerAngle":[0.0, 0.0, 10.0],
 			"setPoint":[-0.70738827, 0.0, -0.70682518, 0.0],
-			"setPoint-fake":[1.0,  0.0, 0.0, 0.0],
 			"bodyLinkNumber": -1,
 			"Comment": "-1: end-effector, 4: elbow",
 			"Kp": 100.0,
@@ -116,7 +115,7 @@
 			"Kd": 100.0
 		},
 		"velocityTask":{
-			"enabled": false,
+			"enabled": true,
 			"taskWeight": 50.0,
 			"endEffectorName": "palm",
 			"axis_selection":[1.0, 0.0, 0.0],

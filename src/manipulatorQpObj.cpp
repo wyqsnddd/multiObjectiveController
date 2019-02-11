@@ -110,17 +110,28 @@ void manipulatorQpObj::initializeTasks_(){
 		bool sitStill = configurationDataTree_.get<bool>("qpController.orientationTask.stayStill", 0);
 		Eigen::Quaterniond desiredQuaternion;
 		desiredQuaternion.setIdentity();
-
+		dart::dynamics::BodyNode* tempEePtr = robotPtr_->getBodyNode(eeName);
 		if (sitStill){
-			dart::dynamics::BodyNode* tempEePtr = robotPtr_->getBodyNode(eeName);
 			Eigen::Quaterniond tempQuat(tempEePtr->getTransform().rotation());
 			desiredQuaternion = tempQuat; 
 		}else{
-	 		desiredQuaternion.w() = as_vector<double>(configurationDataTree_, "qpController.orientationTask.setPoint")[0];
-	 		desiredQuaternion.x() = as_vector<double>(configurationDataTree_, "qpController.orientationTask.setPoint")[1];
-	 		desiredQuaternion.y() = as_vector<double>(configurationDataTree_, "qpController.orientationTask.setPoint")[2];
-	 		desiredQuaternion.z() = as_vector<double>(configurationDataTree_, "qpController.orientationTask.setPoint")[3];
-		
+		  dart::dynamics::BodyNode* tempEePtr = robotPtr_->getBodyNode(eeName);
+
+		  double eulerX(0.0), eulerY(0.0), eulerZ(0.0);
+		  Eigen::Quaterniond currentQuat = Eigen::Quaterniond(tempEePtr->getTransform().rotation());
+
+		  
+		  eulerX = (as_vector<double>(configurationDataTree_, "qpController.orientationTask.setPoint-EulerAngle")[0])*M_PI/180.0;
+		  eulerY = (as_vector<double>(configurationDataTree_, "qpController.orientationTask.setPoint-EulerAngle")[1])*M_PI/180.0;
+		  eulerZ = (as_vector<double>(configurationDataTree_, "qpController.orientationTask.setPoint-EulerAngle")[2])*M_PI/180.0;
+
+		  std::cout<<"The initial x is: "<<eulerX<< ", the initial Y is: "<<eulerY<<", the initial z is: "<<eulerZ<<std::endl;
+		  
+		  desiredQuaternion = currentQuat*(
+		  				      Eigen::AngleAxisd(eulerZ, Eigen::Vector3d::UnitZ())
+		  				      * Eigen::AngleAxisd(eulerY, Eigen::Vector3d::UnitY())
+		  				      * Eigen::AngleAxisd(eulerX, Eigen::Vector3d::UnitX())
+						   );
 		}
 
 		std::cout<<"Orientation task weight: "<<weight<<", eename: "<<eeName<<", kv: "<<kv<<", kp: "<<kp<<", desiredOrientation: "<<desiredQuaternion.w()<<", "<<desiredQuaternion.vec()<<", selection vector: "<<selectionVector<<std::endl;
