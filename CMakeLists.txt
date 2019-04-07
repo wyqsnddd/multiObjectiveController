@@ -7,6 +7,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CONFIG_INSTALL_DIR "share/${PROJECT_NAME}/cmake")
 set(INCLUDE_INSTALL_DIR "include")
 set(LIBRARY_INSTALL_DIR "lib")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
 
 project(impactControllers)
 
