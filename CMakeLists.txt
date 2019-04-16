@@ -41,9 +41,6 @@ initialize_component_helpers(${PROJECT_NAME})
 #===============================================================================
 
 # If you change the version, please update the <version> tag in package.xml.
-set(DART_MAJOR_VERSION "7")
-set(DART_MINOR_VERSION "0")
-set(DART_PATCH_VERSION "0")
 set(DART_VERSION "${DART_MAJOR_VERSION}.${DART_MINOR_VERSION}.${DART_PATCH_VERSION}")
 set(DART_PKG_DESC "Dynamic Animation and Robotics Toolkit.")
 set(DART_PKG_EXTERNAL_DEPS "eigen, ccd, fcl, assimp, boost")
@@ -207,7 +204,6 @@ endif(DART_VERBOSE)
 # Add control libraries 
 #===============================================================================
 add_compile_options(-std=c++11)
-# find_package(DART 7.0.0 REQUIRED COMPONENTS io-urdf gui-osg dart-opimizer CONFIG)
 
 file(GLOB lib_srcs "include/*" "src/*.cpp")
 find_package(NLOPT)
