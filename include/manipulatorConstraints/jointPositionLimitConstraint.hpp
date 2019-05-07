@@ -1,80 +1,113 @@
-# ifndef JOINTPOSITIONLIMITCONSTRAINT_HPP
-# define JOINTPOSITIONLIMITCONSTRAINT_HPP
+/* Copyright 2018-2019 CNRS-UM LIRMM
+ *
+ * \author Yuquan Wang 
+ *
+ * 
+ *
+ * multiObjectiveController is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * pyQpController is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with multiObjectiveController. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 
-# include <vector>
-# include <Eigen/Dense>
+#ifndef JOINTPOSITIONLIMITCONSTRAINT_HPP
+#define JOINTPOSITIONLIMITCONSTRAINT_HPP
 
-# include <dart/dart.hpp>
-# include <dart/optimizer/Function.hpp>
+#include <Eigen/Dense>
+#include <dart/dart.hpp>
+#include <dart/optimizer/Function.hpp>
+#include <vector>
 
+class jointPositionLimitConstraint : public dart::optimizer::Function
+{
+public:
+  jointPositionLimitConstraint(const dart::dynamics::SkeletonPtr & skelPtr,
+                               const int jointNumber,
+                               const bool lowerBoundIndicator)
+  : dart::optimizer::Function()
+  {
 
-class jointPositionLimitConstraint : public dart::optimizer::Function {
-	public:
-		jointPositionLimitConstraint (const dart::dynamics::SkeletonPtr& skelPtr, const int jointNumber, const bool lowerBoundIndicator ): dart::optimizer::Function(){
+    robotPtr_ = skelPtr;
+    assert(robotPtr_ != nullptr);
 
-			robotPtr_ = skelPtr;
-			assert(robotPtr_ != nullptr);
+    jointNumber_ = jointNumber;
+    lowerBoundIndicator_ = lowerBoundIndicator;
 
-			jointNumber_ = jointNumber;
-			lowerBoundIndicator_ = lowerBoundIndicator;
+    std::stringstream ss;
 
-			std::stringstream ss;
+    if(lowerBoundIndicator_)
+    {
+      bound_ = robotPtr_->getPositionLowerLimit(jointNumber_);
+      grad_ = Eigen::VectorXd(robotPtr_->getNumDofs());
+      grad_.setZero();
+      grad_(jointNumber_) = -1.0;
 
-			if(lowerBoundIndicator_){
-				bound_ = robotPtr_->getPositionLowerLimit(jointNumber_); 
-				grad_ = Eigen::VectorXd(robotPtr_->getNumDofs());
-				grad_.setZero();
-				grad_(jointNumber_) = -1.0;
+      ss << "Joint_" << jointNumber_ << "_" << robotPtr_->getJoint(jointNumber_ + 1)->getName()
+         << "_position_lower_limit_constraint";
+      setName(ss.str());
+    }
+    else
+    {
+      bound_ = robotPtr_->getPositionUpperLimit(jointNumber_);
+      grad_ = Eigen::VectorXd(robotPtr_->getNumDofs());
+      grad_.setZero();
+      grad_(jointNumber_) = 1.0;
+      ss << "Joint_" << jointNumber_ << "_" << robotPtr_->getJoint(jointNumber_ + 1)->getName()
+         << "_position_upper_limit_constraint";
+      setName(ss.str());
+    }
 
-				ss<<"Joint_"<<jointNumber_<<"_"<<robotPtr_->getJoint(jointNumber_+1)->getName()<<"_position_lower_limit_constraint";
-				setName(ss.str());
-			}else{
-				bound_ = robotPtr_->getPositionUpperLimit(jointNumber_); 
-				grad_ = Eigen::VectorXd(robotPtr_->getNumDofs());
-				grad_.setZero();
-				grad_(jointNumber_) = 1.0;
-				ss<<"Joint_"<<jointNumber_<<"_"<<robotPtr_->getJoint(jointNumber_+1)->getName()<<"_position_upper_limit_constraint";
-				setName(ss.str());
+    std::cout << getName() << " bound is: " << bound_ << std::endl;
+  }
 
-			}
+  ~jointPositionLimitConstraint() {}
 
-			std::cout<<getName()<<" bound is: "<<bound_<<std::endl;
-		}
+  /**
+   * Update the data that are used to calc the gradients and costs.
+   */
+  void update() {}
 
-		~jointPositionLimitConstraint(){
-		}
+  double eval(const Eigen::VectorXd & _x) const override
+  {
+    if(lowerBoundIndicator_)
+    {
+      return -_x(jointNumber_)
+             + ((bound_ - robotPtr_->getPosition(jointNumber_)) / pow(robotPtr_->getTimeStep(), 2)
+                - robotPtr_->getVelocity(jointNumber_) / robotPtr_->getTimeStep());
+    }
+    else
+    {
+      return _x(jointNumber_)
+             - ((bound_ - robotPtr_->getPosition(jointNumber_)) / pow(robotPtr_->getTimeStep(), 2)
+                - robotPtr_->getVelocity(jointNumber_) / robotPtr_->getTimeStep());
+    }
+  }
+  void evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) const override
+  {
+    _grad = grad_;
+  }
 
-		/**
-		 * Update the data that are used to calc the gradients and costs.
-		 */
-		void update(){
-		}
+private:
+  dart::dynamics::SkeletonPtr robotPtr_;
 
-		double eval(const Eigen::VectorXd& _x ) const override{
-			if(lowerBoundIndicator_){
-				return - _x(jointNumber_) + ((bound_ - robotPtr_->getPosition(jointNumber_))/pow(robotPtr_->getTimeStep(), 2) - robotPtr_->getVelocity(jointNumber_)/robotPtr_->getTimeStep());
-			}else{
-				return _x(jointNumber_) - ((bound_ - robotPtr_->getPosition(jointNumber_))/pow(robotPtr_->getTimeStep(), 2) - robotPtr_->getVelocity(jointNumber_)/robotPtr_->getTimeStep());
-			}
-		}
-		void evalGradient(const Eigen::VectorXd& _x, Eigen::Map<Eigen::VectorXd> _grad ) const override{
-			_grad = grad_;
-		}
-	private:
+  /**
+   * Index from zero
+   */
+  int jointNumber_;
 
-	dart::dynamics::SkeletonPtr robotPtr_;
-	
-	/** 
-	 * Index from zero
-	 */
-	int  jointNumber_;
+  double bound_;
+  bool lowerBoundIndicator_;
 
-	double bound_;
-	bool lowerBoundIndicator_;
-	
-	Eigen::VectorXd grad_;
-
-
+  Eigen::VectorXd grad_;
 };
 
-# endif
+#endif
