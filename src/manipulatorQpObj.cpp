@@ -26,7 +26,7 @@ void manipulatorQpObj::update()
 
   initializeObjMatricies_();
 
-  for(int ii = 0; ii < tasks_.size(); ii++)
+  for(unsigned ii = 0; ii < tasks_.size(); ii++)
   {
     // for(int ii = 0; ii<2; ii++){
     std::cout << "Update task: " << ii << std::endl;
@@ -45,7 +45,7 @@ void manipulatorQpObj::update()
   // std::cout<<"The qpObj: C is: "<< objC_<<std::endl;
 }
 
-double manipulatorQpObj::eval(const Eigen::VectorXd & _x) const
+double manipulatorQpObj::eval(const Eigen::VectorXd & _x)
 {
   double temp_one = _x.transpose() * readQ_() * _x;
   double temp_two = readP_().transpose() * _x;
@@ -184,7 +184,7 @@ void manipulatorQpObj::initializeTasks_()
   } // end of orientation task initialization.
 }
 
-void manipulatorQpObj::evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) const
+void manipulatorQpObj::evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) 
 {
   _grad = readQ_() * _x + readP_();
 }

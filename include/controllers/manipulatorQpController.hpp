@@ -47,7 +47,7 @@ public:
 
     optimalJointAcceleration_.setZero();
 
-    initializeOptimizer_(robotPtr_->getNumDofs());
+    initializeOptimizer_(static_cast<int>(robotPtr_->getNumDofs()));
   }
   ~manipulatorQpController() {}
 
@@ -63,7 +63,7 @@ public:
   */
   int getRobotDof() const
   {
-    return robotPtr_->getNumDofs();
+    return static_cast<int>(robotPtr_->getNumDofs());
   }
 
 private:

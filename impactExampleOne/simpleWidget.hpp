@@ -162,21 +162,21 @@ class simpleWidget : public dart::gui::osg::ImGuiWidget
 			{
 				auto lcpSolver = std::make_shared<dart::constraint::DantzigBoxedLcpSolver>();
 				auto solver = dart::common::make_unique<dart::constraint::BoxedLcpConstraintSolver>(
-						mWorld->getTimeStep(), lcpSolver);
+						 lcpSolver);
 				mWorld->setConstraintSolver(std::move(solver));
 			}
 			else if (solverType == 1)
 			{
 				auto lcpSolver = std::make_shared<dart::constraint::DantzigBoxedLcpSolver>();
 				auto solver = dart::common::make_unique<dart::constraint::BoxedLcpConstraintSolver>(
-						mWorld->getTimeStep(), lcpSolver);
+						lcpSolver);
 				mWorld->setConstraintSolver(std::move(solver));
 			}
 			else if (solverType == 2)
 			{
 				auto lcpSolver = std::make_shared<dart::constraint::PgsBoxedLcpSolver>();
 				auto solver = dart::common::make_unique<dart::constraint::BoxedLcpConstraintSolver>(
-						mWorld->getTimeStep(), lcpSolver);
+						 lcpSolver);
 				mWorld->setConstraintSolver(std::move(solver));
 			}
 			else

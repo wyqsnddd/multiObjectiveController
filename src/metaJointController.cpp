@@ -24,7 +24,7 @@
 Eigen::VectorXd metaJointController::computedTorque_(const Eigen::VectorXd & acc)
 {
 
-  int nDof = robotPtr_->getNumDofs();
+  int nDof = static_cast<int>(robotPtr_->getNumDofs());
   Eigen::VectorXd tau(nDof);
 
   Eigen::VectorXd q = robotPtr_->getPositions();

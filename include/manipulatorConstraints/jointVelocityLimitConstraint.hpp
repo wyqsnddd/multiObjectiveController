@@ -74,7 +74,7 @@ public:
    */
   void update() {}
 
-  double eval(const Eigen::VectorXd & _x) const override
+  virtual double eval(const Eigen::VectorXd & _x) override
   {
     if(lowerBoundIndicator_)
     {
@@ -85,7 +85,7 @@ public:
       return _x(jointNumber_) - (bound_ - robotPtr_->getVelocity(jointNumber_)) / robotPtr_->getTimeStep();
     }
   }
-  void evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) const override
+  virtual void evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) override
   {
     _grad = grad_;
   }

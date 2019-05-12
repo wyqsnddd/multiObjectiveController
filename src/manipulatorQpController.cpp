@@ -40,7 +40,7 @@ void manipulatorQpController::initializeOptimizer_(int dofs)
   solverOptimalityStatus_ = true;
 
   // Go through the joint position inequalities:
-  for(int ii = 0; ii < robotPtr_->getNumDofs(); ii++)
+  for(unsigned ii = 0; ii < robotPtr_->getNumDofs(); ii++)
   {
     // add the upper bound for joint ii
     std::shared_ptr<jointPositionLimitConstraint> tempJointUpperPositionConstraintPtr =
@@ -55,7 +55,7 @@ void manipulatorQpController::initializeOptimizer_(int dofs)
   }
 
   // Go through the joint velocity inequalities:
-  for(int ii = 0; ii < robotPtr_->getNumDofs(); ii++)
+  for(unsigned ii = 0; ii < robotPtr_->getNumDofs(); ii++)
   {
     std::shared_ptr<jointVelocityLimitConstraint> tempJointUpperVelocityConstraintPtr =
         std::make_shared<jointVelocityLimitConstraint>(robotPtr_, ii, false);
@@ -70,7 +70,7 @@ void manipulatorQpController::initializeOptimizer_(int dofs)
 
   // Go through the joint acceleration inequalities:
   // By default, the joint acceleration limit is not specified
-  for(int ii = 0; ii < robotPtr_->getNumDofs(); ii++)
+  for(unsigned ii = 0; ii < robotPtr_->getNumDofs(); ii++)
   {
     // add the upper bound for joint ii
     // double upperBound = configurationDataTree_.get<double>("qpController.accelerationLimits.upper", ii);
@@ -88,7 +88,7 @@ void manipulatorQpController::initializeOptimizer_(int dofs)
     probPtr_->addIneqConstraint(tempJointLowerAccelerationConstraintPtr);
   }
   // Go through the torque limits
-  for(int ii = 0; ii < robotPtr_->getNumDofs(); ii++)
+  for(unsigned ii = 0; ii < robotPtr_->getNumDofs(); ii++)
   {
     // add the upper bound for joint ii
     // double upperBound = configurationDataTree_.get<double>("qpController.accelerationLimits.upper", ii);
@@ -137,4 +137,5 @@ bool manipulatorQpController::update()
 
   std::cout << "The generated joint acceleration is: " << std::endl << optimalJointAcceleration_ << std::endl;
   jointControllerPtr_->update(optimalJointAcceleration_);
+  return true;
 }

@@ -49,6 +49,7 @@ public:
     tempAcc.setZero();
     jointControllerPtr_->update(tempAcc);
     // robotPtr_->setForces(accToTorque(tempAcc));
+    return true;
   }
 
   // Eigen::VectorXd accToTorque(const Eigen::VectorXd &acc);

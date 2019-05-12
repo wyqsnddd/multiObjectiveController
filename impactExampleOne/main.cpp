@@ -21,8 +21,10 @@
 
 #include <dart/dart.hpp>
 #include <dart/gui/osg/osg.hpp>
-#include <dart/io/io.hpp>
-#include <dart/io/urdf/urdf.hpp>
+//#include <dart/io/io.hpp>
+//#include <dart/utils/urdf/urdf.hpp>
+#include <dart/utils/urdf/DartLoader.hpp>
+#include <dart/utils/utils.hpp>
 
 # include "simpleWorldNodeOne.hpp"
 # include "simpleEventHandler.hpp"
@@ -55,11 +57,11 @@ int main(int argc, char** argv)
 
 	// Create a world
 	dart::simulation::WorldPtr worldPtr 
-		= dart::io::SkelParser::readWorld("dart://sample/skel/impact_wall.skel");
+		= dart::utils::SkelParser::readWorld("dart://sample/skel/impact_wall.skel");
 
 	assert(worldPtr != nullptr);
 	// Rotate and move the ground so that z is upwards
-	for (int i = 0; i<worldPtr->getNumSkeletons(); i++){
+	for (unsigned i = 0; i<worldPtr->getNumSkeletons(); i++){
 		//dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton("ground_skeleton");
 		dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton(i);
 
@@ -74,7 +76,7 @@ int main(int argc, char** argv)
 
 	// Load the robot
 
-	dart::io::DartLoader loader;
+	dart::utils::DartLoader loader;
 
 	dart::dynamics::SkeletonPtr robot =
 		loader.parseSkeleton("dart://sample/urdf/KR5/KR5_sixx_R650.urdf");

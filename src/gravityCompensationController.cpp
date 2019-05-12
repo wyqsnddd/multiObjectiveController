@@ -22,7 +22,7 @@
 #include <controllers/gravityCompensationController.hpp>
 Eigen::VectorXd gravityCompensationController::computeTorques()
 {
-  int nDof = robotPtr_->getNumDofs();
+  int nDof = static_cast<int>(robotPtr_->getNumDofs());
   Eigen::VectorXd tau(nDof);
   // tau = Eigen::VectorXd::Zero(nDof);
   tau.setZero();

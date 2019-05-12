@@ -53,6 +53,7 @@ public:
   virtual bool update(const Eigen::VectorXd & inputAcc)
   {
     robotPtr_->setForces(computedTorque_(inputAcc));
+    return true;
   }
 
 protected:
