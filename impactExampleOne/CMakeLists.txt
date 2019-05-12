@@ -1,19 +1,8 @@
-cmake_minimum_required(VERSION 2.8.12)
-
-if(DART_IN_SOURCE_BUILD)
-  include(${CMAKE_CURRENT_SOURCE_DIR}/InSourceBuild.cmake)
-  return()
-endif()
-
-project(impactExampleOne)
-
-find_package(DART 7.0.0 REQUIRED COMPONENTS io-urdf gui-osg optimizer-nlopt CONFIG)
-find_package(NLOPT)
-add_compile_options(-std=c++11)
-
-include_directories(${DART_INCLUDE_DIRS} ${NLOPT_INCLUDE_DIRS})
+link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 file(GLOB srcs "*.cpp" "*.hpp")
-add_executable(${PROJECT_NAME} ${srcs})
+add_executable(impactExampleOne ${srcs})
 
-target_link_libraries(${PROJECT_NAME} ${DART_LIBRARIES} ${NLOPT_LIBRARIES} impactControllers dart )
+target_link_libraries(impactExampleOne ${DART_LIBRARIES} ${NLOPT_LIBRARIES} impactControllers)
+set_target_properties(impactExampleOne PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
