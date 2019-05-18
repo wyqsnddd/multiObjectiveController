@@ -35,7 +35,7 @@ std::vector<T> as_vector(boost::property_tree::ptree const & ptIn, boost::proper
   return r;
 }
 
-inline Eigen::VectorXd quatVector(Eigen::Quaterniond & input)
+inline Eigen::VectorXd & quatVector(const Eigen::Quaterniond & input)
 {
   Eigen::VectorXd output(4);
   output(0) = input.w();
@@ -45,7 +45,7 @@ inline Eigen::VectorXd quatVector(Eigen::Quaterniond & input)
   return output;
 }
 
-inline Eigen::Quaterniond vecQuat(Eigen::VectorXd & input)
+inline Eigen::Quaterniond & vecQuat(const Eigen::VectorXd & input)
 {
 
   Eigen::Quaterniond output;
