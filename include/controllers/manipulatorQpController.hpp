@@ -52,7 +52,7 @@ public:
   ~manipulatorQpController() {}
 
   bool update() override;
-  const Eigen::VectorXd readOptimalAcc();
+  const Eigen::VectorXd & readOptimalAcc();
   /*
   const Eigen::VectorXd readP() const{
     return objP_;

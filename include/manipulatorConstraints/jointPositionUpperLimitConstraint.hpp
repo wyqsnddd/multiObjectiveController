@@ -61,24 +61,24 @@ private:
   Eigen::VectorXd upperLimit_;
   Eigen::VectorXd lowerLimit_;
 
-  Eigen::VectorXd upperRHS_() const
+  Eigen::VectorXd & upperRHS_() const
   {
     return (upperLimit_ - robotPtr_->getPositions()) / pow(robotPtr_->getTimeStep(), 2)
            - robotPtr_->getVelocities() / robotPtr_->getTimeStep();
   }
 
-  Eigen::VectorXd lowerRHS_() const
+  Eigen::VectorXd & lowerRHS_() const
   {
   return -(
 			lowerLimit_ - robotPtr_->getPositions())/pow(robotPtr_->getTimeStep(), 2) - robotPtr_->getVelocities()/robotPtr_->getTimeStep()
 		);
   }
 
-  Eigen::MatrixXd upperLHS_() const
+  Eigen::MatrixXd & upperLHS_() const
   {
     return Eigen::MatrixXd::Identity(robotPtr_->getNumDofs());
   }
-  Eigen::MatrixXd lowerLHS_() const
+  Eigen::MatrixXd & lowerLHS_() const
   {
     return -Eigen::MatrixXd::Identity(robotPtr_->getNumDofs());
   }

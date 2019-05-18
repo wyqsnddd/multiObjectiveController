@@ -76,11 +76,11 @@ public:
     calcC_();
   }
 
-  Eigen::MatrixXd getQ() const
+  const Eigen::MatrixXd & getQ() const
   {
     return objQ_;
   }
-  Eigen::VectorXd getP() const
+  const Eigen::VectorXd & getP() const
   {
     return objP_;
   }
@@ -96,11 +96,11 @@ public:
   {
     return goal_;
   }
-  virtual Eigen::Vector3d getError() const
+  virtual const Eigen::Vector3d & getError() const
   {
     return error_;
   }
-  virtual void calcError(const Eigen::Vector3d value)
+  virtual void calcError(const Eigen::Vector3d & value)
   {
     error_ = selectionMatrix_ * (value - goal_);
   }

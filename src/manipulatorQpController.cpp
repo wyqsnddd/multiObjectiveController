@@ -108,7 +108,7 @@ void manipulatorQpController::initializeOptimizer_(int dofs)
 
 } // end of optimizer initialization
 
-const Eigen::VectorXd manipulatorQpController::readOptimalAcc()
+const Eigen::VectorXd &  manipulatorQpController::readOptimalAcc()
 {
   if(solverOptimalityStatus_)
     return optimalJointAcceleration_;
