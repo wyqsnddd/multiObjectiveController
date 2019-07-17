@@ -33,34 +33,49 @@ class metaManipulatorTask
 {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-  metaManipulatorTask(const std::string & endEffectorName,
+metaManipulatorTask(const std::string & endEffectorName,
                       const Eigen::Vector3d & goal,
                       const dart::dynamics::SkeletonPtr & skelPtr,
                       const pt::ptree configurationDataTree,
                       double weight,
                       double Kv,
                       double Kp,
-                      Eigen::Vector3d selectionV)
+                      Eigen::Vector3d selectionV): robotPtr_(skelPtr), configurationDataTree_(configurationDataTree), taskWeight_(weight), Kv_(Kv), Kp_(Kp) 
   {
 
-    robotPtr_ = skelPtr;
     assert(robotPtr_ != nullptr);
-    // goal_ = goal;
     error_.setZero();
 
-    // eePtr_ = robotPtr_->getEndEffector(endEffectorName);
-    eePtr_ = robotPtr_->getBodyNode(endEffectorName);
+    selectionMatrix_.setIdentity();
 
-    configurationDataTree_ = configurationDataTree;
-    taskWeight_ = weight;
-    Kp_ = Kp;
-    Kv_ = Kv;
-    selectionMatrix_.setZero();
+    objQ_.resize(robotPtr_->getNumDofs(), robotPtr_->getNumDofs());
+    objQ_.setIdentity();
+    objP_.resize(robotPtr_->getNumDofs());
+    objP_.setZero();
+    objC_ = 0.0;
+
     selectionMatrix_(0, 0) = selectionV(0);
     selectionMatrix_(1, 1) = selectionV(1);
     selectionMatrix_(2, 2) = selectionV(2);
-    // BodyNodeIndex_ = BodyNodeIndex;
+
+    eePtr_ = robotPtr_->getBodyNode(endEffectorName);
     setTarget(goal);
+
+  }
+
+  metaManipulatorTask(
+                      const dart::dynamics::SkeletonPtr & skelPtr,
+                      const pt::ptree configurationDataTree,
+                      double weight,
+                      double Kv,
+                      double Kp
+                      ): robotPtr_(skelPtr), configurationDataTree_(configurationDataTree), taskWeight_(weight), Kv_(Kv), Kp_(Kp) 
+  {
+
+    assert(robotPtr_ != nullptr);
+    error_.setZero();
+
+    selectionMatrix_.setIdentity();
 
     objQ_.resize(robotPtr_->getNumDofs(), robotPtr_->getNumDofs());
     objQ_.setIdentity();
@@ -68,7 +83,7 @@ public:
     objP_.setZero();
     objC_ = 0.0;
   }
-  ~metaManipulatorTask() {}
+    ~metaManipulatorTask() {}
   virtual void update()
   {
     calcQ_();
@@ -106,12 +121,13 @@ public:
   }
 
 protected:
+
+  pt::ptree configurationDataTree_;
   double taskWeight_;
-  double Kp_;
   double Kv_;
+  double Kp_;
   Eigen::Matrix3d selectionMatrix_;
   // int BodyNodeIndex_;
-  pt::ptree configurationDataTree_;
 
   dart::dynamics::SkeletonPtr robotPtr_;
 
