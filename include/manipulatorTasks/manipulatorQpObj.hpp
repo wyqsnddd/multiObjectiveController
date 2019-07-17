@@ -30,6 +30,7 @@
 #include <dart/optimizer/Function.hpp>
 #include <dart/optimizer/Problem.hpp>
 #include <vector>
+#include <map>
 
 //# include <controllers/manipulatorQpController.hpp>
 
@@ -60,7 +61,10 @@ public:
   virtual double eval(const Eigen::VectorXd & _x) override;
   virtual void evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) override;
   void update();
-
+  inline const std::map<std::string, std::shared_ptr<metaManipulatorTask> > & getTasks()
+  {
+    return tasks_; 
+  }
 private:
   // const manipulatorQpController * qpControllerPtr_;
   dart::dynamics::SkeletonPtr robotPtr_;
@@ -75,7 +79,10 @@ private:
      return r;
      }
      */
-  std::vector<std::shared_ptr<metaManipulatorTask>> tasks_;
+  //std::vector<std::shared_ptr<metaManipulatorTask>> tasks_;
+  //std::vector<std::shared_ptr<metaManipulatorTask>> tasks_;
+
+  std::map<std::string, std::shared_ptr<metaManipulatorTask> > tasks_;
   void initializeTasks_();
 
   Eigen::MatrixXd jointWeights_Q_;

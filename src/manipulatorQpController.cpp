@@ -21,6 +21,18 @@
 
 #include <controllers/manipulatorQpController.hpp>
 
+const std::shared_ptr<metaManipulatorTask> & manipulatorQpController::getTask(const std::string & taskName)
+{
+  auto tempEe = objPtr_->getTasks().find(taskName);
+  if(tempEe != objPtr_->getTasks().end())
+    return tempEe->second;
+  else
+  {
+    // std::cout << "Link " << eeName << " is missing." << std::endl;
+    std::string error_msg = std::string("manipulatorQpController::findTask: task ") + taskName + std::string(": does not exist.");
+    throw std::runtime_error(error_msg);
+  }
+}
 void manipulatorQpController::initializeOptimizer_(int dofs)
 {
 

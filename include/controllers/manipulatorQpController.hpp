@@ -65,6 +65,7 @@ public:
   {
     return static_cast<int>(robotPtr_->getNumDofs());
   }
+  const std::shared_ptr<metaManipulatorTask> & getTask(const std::string & taskName);
 
 private:
   void initializeOptimizer_(int dofs);

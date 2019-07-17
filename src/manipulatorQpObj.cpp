@@ -26,23 +26,18 @@ void manipulatorQpObj::update()
 
   initializeObjMatricies_();
 
-  for(unsigned ii = 0; ii < tasks_.size(); ii++)
+  for(auto it = tasks_.begin(); it != tasks_.end(); ++it )
   {
-    // for(int ii = 0; ii<2; ii++){
-    std::cout << "Update task: " << ii << std::endl;
-
-    tasks_[ii]->update();
-    // Sum the Q matrix
-    addToQ_(tasks_[ii]->getQ());
+    std::cout << "Update task: " << it->first << std::endl;
+    it->second->update();
+     // Sum the Q matrix
+    addToQ_(it->second->getQ());
     // Sum the P matrix
-    addToP_(tasks_[ii]->getP());
+    addToP_(it->second->getP());
     // Sum teh C matrix
-    addToC_(tasks_[ii]->getC());
+    addToC_(it->second->getC());
+
   }
-  // tasks_[2]->update();
-  // 	std::cout<<"The qpObj: Q is: "<< objQ_ <<std::endl;
-  // std::cout<<"The qpObj: P is: "<< objP_<<std::endl;
-  // std::cout<<"The qpObj: C is: "<< objC_<<std::endl;
 }
 
 double manipulatorQpObj::eval(const Eigen::VectorXd & _x)
@@ -86,8 +81,8 @@ void manipulatorQpObj::initializeTasks_()
               << std::endl;
     std::shared_ptr<positionTask> positionTaskPtr = std::make_shared<positionTask>(
         eeName, desiredPosition, robotPtr_, configurationDataTree_, weight, kv, kp, selectionVector);
-
-    tasks_.push_back(positionTaskPtr);
+    tasks_["positionTask"] = positionTaskPtr;
+//    tasks_.push_back(positionTaskPtr);
   } // end of position task initialization
 
   // Initilize the linear velocity task:
@@ -115,7 +110,8 @@ void manipulatorQpObj::initializeTasks_()
               << std::endl;
     std::shared_ptr<linearVelocityTask> linearVelocityTaskPtr = std::make_shared<linearVelocityTask>(
         eeName, desiredVelocity, robotPtr_, configurationDataTree_, weight, kv, kp, selectionVector);
-    tasks_.push_back(linearVelocityTaskPtr);
+    tasks_["linearVelocityTask"] = linearVelocityTaskPtr;
+    //tasks_.push_back(linearVelocityTaskPtr);
 
   } // end of linear velocity task initialization
 
@@ -179,7 +175,8 @@ void manipulatorQpObj::initializeTasks_()
               << ", selection vector: " << selectionVector << std::endl;
     std::shared_ptr<orientationTask> orientationTaskPtr = std::make_shared<orientationTask>(
         eeName, desiredQuaternion, robotPtr_, configurationDataTree_, weight, kv, kp, selectionVector);
-    tasks_.push_back(orientationTaskPtr);
+    tasks_["orientationTask"]=orientationTaskPtr;
+    //tasks_.push_back(orientationTaskPtr);
 
   } // end of orientation task initialization.
   // Initilize the collision avoidance task:
@@ -192,7 +189,8 @@ void manipulatorQpObj::initializeTasks_()
   std::shared_ptr<collisionAvoidanceTask> collisionAvoidanceTaskPtr = std::make_shared<collisionAvoidanceTask>(
         robotPtr_, configurationDataTree_, weight, kv, kp);
 
-    tasks_.push_back(collisionAvoidanceTaskPtr);
+    tasks_["collisionAvoidanceTask"]= collisionAvoidanceTaskPtr;
+    //tasks_.push_back(collisionAvoidanceTaskPtr);
 
   }// end of collision avoidance task initialization.
 }
