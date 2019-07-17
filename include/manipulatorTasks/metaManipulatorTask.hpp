@@ -83,7 +83,7 @@ metaManipulatorTask(const std::string & endEffectorName,
     objP_.setZero();
     objC_ = 0.0;
   }
-    ~metaManipulatorTask() {}
+  virtual ~metaManipulatorTask() {}
   virtual void update()
   {
     calcQ_();

@@ -21,8 +21,6 @@
 
 #include <dart/dart.hpp>
 #include <dart/gui/osg/osg.hpp>
-//#include <dart/io/io.hpp>
-//#include <dart/utils/urdf/urdf.hpp>
 #include <dart/utils/urdf/DartLoader.hpp>
 #include <dart/utils/utils.hpp>
 
@@ -49,7 +47,7 @@ int main(int argc, char** argv)
 	pt::ptree root;
 	//
 	// // Load the json file in this ptree
-	pt::read_json("../config/impact_one.json", root);
+	pt::read_json("../config/collision_one.json", root);
 
 	// double jointUnitWeight = root.get<double>("qpController.jointUnitWeight", 0);
 	// double jointUnitWeight = root.get<double>("qpController.jointUnitWeight");
@@ -101,6 +99,8 @@ int main(int argc, char** argv)
 	//gravityCompensationController * sampleControllerPtr = new gravityCompensationController(robot);
 	manipulatorQpController* sampleQpControllerPtr = new manipulatorQpController(robot, root);
 	//metaController* sampleQpControllerPtr = new metaController(robot);
+	//sampleQpControllerPtr->getTask("collisionAvoidanceTask")->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
+	dynamic_cast<collisionAvoidanceTask * >(sampleQpControllerPtr->getTask("collisionAvoidanceTask").get())->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
 
 	// Add a target object to the world
 	dart::gui::osg::InteractiveFramePtr targetPtr(
