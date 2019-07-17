@@ -59,7 +59,7 @@
 			"Kd": 5.0
 		},
 		"collisionAvoidanceTask":{
-			"enabled": false,
+			"enabled": true,
 			"taskWeight": 500.0,
 			"endEffectorName": "palm",
 			"axis_selection":[0.0, 1.0, 1.0],

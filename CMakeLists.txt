@@ -43,6 +43,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMA
 # Add sub-directories
 #===============================================================================
 
-add_subdirectory(impactExampleOne)
+add_subdirectory(examples)
 
 setup_project_finalize()

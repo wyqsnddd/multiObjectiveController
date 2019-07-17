@@ -182,6 +182,19 @@ void manipulatorQpObj::initializeTasks_()
     tasks_.push_back(orientationTaskPtr);
 
   } // end of orientation task initialization.
+  // Initilize the collision avoidance task:
+  bool enableCollisionAvoidanceTask = configurationDataTree_.get<bool>("qpController.collisionAvoidanceTask.enabled", 0);
+  if(enableCollisionAvoidanceTask) 
+  {
+    double weight = configurationDataTree_.get<double>("qpController.collisionAvoidanceTask.taskWeight", 0);
+    double kv = configurationDataTree_.get<double>("qpController.collisionAvoidanceTask.Kd", 0);
+    double kp = configurationDataTree_.get<double>("qpController.collisionAvoidanceTask.Kp", 0);
+  std::shared_ptr<collisionAvoidanceTask> collisionAvoidanceTaskPtr = std::make_shared<collisionAvoidanceTask>(
+        robotPtr_, configurationDataTree_, weight, kv, kp);
+
+    tasks_.push_back(collisionAvoidanceTaskPtr);
+
+  }// end of collision avoidance task initialization.
 }
 
 void manipulatorQpObj::evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) 
