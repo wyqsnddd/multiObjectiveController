@@ -37,6 +37,7 @@
 #include <manipulatorTasks/metaManipulatorTask.hpp>
 #include <manipulatorTasks/orientationTask.hpp>
 #include <manipulatorTasks/positionTask.hpp>
+#include <manipulatorTasks/collisionAvoidanceTask.hpp>
 #include <utils/utils.hpp>
 
 class manipulatorQpObj : public dart::optimizer::Function
