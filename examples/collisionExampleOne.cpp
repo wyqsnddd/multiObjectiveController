@@ -100,7 +100,17 @@ int main(int argc, char** argv)
 	manipulatorQpController* sampleQpControllerPtr = new manipulatorQpController(robot, root);
 	//metaController* sampleQpControllerPtr = new metaController(robot);
 	//sampleQpControllerPtr->getTask("collisionAvoidanceTask")->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
-	dynamic_cast<collisionAvoidanceTask * >(sampleQpControllerPtr->getTask("collisionAvoidanceTask").get())->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
+	collisionAvoidanceTask * caTaskPtr = dynamic_cast<collisionAvoidanceTask * >(sampleQpControllerPtr->getTask("collisionAvoidanceTask").get());
+	caTaskPtr->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
+
+
+	if (dart::collision::CollisionDetector::getFactory()->canCreate("fcl"))
+	{
+		worldPtr->getConstraintSolver()->setCollisionDetector(
+				dart::collision::CollisionDetector::getFactory()->create("fcl"));
+		std::cout<<"The collision detector is set to: fcl. "<<std::endl;
+	}
+
 
 	// Add a target object to the world
 	dart::gui::osg::InteractiveFramePtr targetPtr(

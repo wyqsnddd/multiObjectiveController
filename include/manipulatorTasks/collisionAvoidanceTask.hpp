@@ -38,6 +38,7 @@ class collisionAvoidanceTask: public metaManipulatorTask
 	       )
   : metaManipulatorTask(skelPtr, configurationDataTree, weight, Kv, Kp){
   
+    resultPtr_ = new dart::collision::DistanceResult();
     std::cout << "The collision avoidance task is created "<<std::endl; 
     //initializeCollisionGroups(robotPtr_);
   }
@@ -55,6 +56,12 @@ class collisionAvoidanceTask: public metaManipulatorTask
   {
     return collisionGroupsInitialized_; 
   }
+  inline const dart::collision::DistanceResult * getDistanceResult()
+  {
+    return resultPtr_; 
+  }
  private:
   bool collisionGroupsInitialized_ = false;
+
+  dart::collision::DistanceResult * resultPtr_;
 };
