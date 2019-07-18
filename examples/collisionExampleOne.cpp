@@ -35,6 +35,8 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
+
+# include <utils/collisionPairVisual.hpp>
 // Short alias for this namespace
 namespace pt = boost::property_tree;
 
@@ -44,10 +46,12 @@ int main(int argc, char** argv)
 {
 
 	// Create a root
-	pt::ptree root;
+	pt::ptree robotOneConfig;
+	pt::ptree robotTwoConfig;
 	//
 	// // Load the json file in this ptree
-	pt::read_json("../config/collision_one.json", root);
+	pt::read_json("../config/collision_one.json", robotOneConfig);
+	pt::read_json("../config/collision_one_robot_two.json", robotTwoConfig);
 
 	// double jointUnitWeight = root.get<double>("qpController.jointUnitWeight", 0);
 	// double jointUnitWeight = root.get<double>("qpController.jointUnitWeight");
@@ -75,10 +79,14 @@ int main(int argc, char** argv)
 	// Load the robot
 
 	dart::utils::DartLoader loader;
+	dart::dynamics::SkeletonPtr robotTwo =
+		loader.parseSkeleton("dart://sample/urdf/KR5/KR5_sixx_R650.urdf");
 
 	dart::dynamics::SkeletonPtr robot =
 		loader.parseSkeleton("dart://sample/urdf/KR5/KR5_sixx_R650.urdf");
+
 	worldPtr->addSkeleton(robot);
+	worldPtr->addSkeleton(robotTwo);
 	// Set the colors of the models to obey the shape's color specification
 	for(std::size_t i=0; i<robot->getNumBodyNodes(); ++i)
 	{
@@ -96,22 +104,18 @@ int main(int argc, char** argv)
 	// Rotate the robot so that z is upwards (default transform is not Identity)
 	robot->getJoint(0)->setTransformFromParentBodyNode(Eigen::Isometry3d::Identity());
 
+	// Read the transform and set: 
+	auto robotTwoTransform = Eigen::Isometry3d::Identity();
+	robotTwoTransform.translation().x() = 0.0; 
+	robotTwoTransform.translation().y() = 1.0; 
+	robotTwoTransform.translation().z() = 0.0; 
+	robotTwo->getJoint(0)->setTransformFromParentBodyNode(robotTwoTransform);
+
 	//gravityCompensationController * sampleControllerPtr = new gravityCompensationController(robot);
-	manipulatorQpController* sampleQpControllerPtr = new manipulatorQpController(robot, root);
+	manipulatorQpController* sampleQpControllerPtr = new manipulatorQpController(robot, robotOneConfig);
+	manipulatorQpController* sampleQpControllerTwoPtr = new manipulatorQpController(robotTwo, robotTwoConfig);
 	//metaController* sampleQpControllerPtr = new metaController(robot);
 	//sampleQpControllerPtr->getTask("collisionAvoidanceTask")->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
-	collisionAvoidanceTask * caTaskPtr = dynamic_cast<collisionAvoidanceTask * >(sampleQpControllerPtr->getTask("collisionAvoidanceTask").get());
-	caTaskPtr->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
-
-
-	if (dart::collision::CollisionDetector::getFactory()->canCreate("fcl"))
-	{
-		worldPtr->getConstraintSolver()->setCollisionDetector(
-				dart::collision::CollisionDetector::getFactory()->create("fcl"));
-		std::cout<<"The collision detector is set to: fcl. "<<std::endl;
-	}
-
-
 	// Add a target object to the world
 	dart::gui::osg::InteractiveFramePtr targetPtr(
 			new dart::gui::osg::InteractiveFrame(dart::dynamics::Frame::World()));
@@ -124,7 +128,9 @@ int main(int argc, char** argv)
 	worldNodeOnePtr->setNumStepsPerCycle(10);
 
 	// worldNodeOnePtr->setController(sampleControllerPtr);
-	worldNodeOnePtr->setController(sampleQpControllerPtr);
+	//worldNodeOnePtr->setController(sampleQpControllerPtr);
+	worldNodeOnePtr->addController("robotOneController", sampleQpControllerPtr);
+	worldNodeOnePtr->addController("robotTwoController", sampleQpControllerTwoPtr);
 	// Create a Viewer and set it up with the WorldNode
 	dart::gui::osg::ImGuiViewer viewer;
 	viewer.addWorldNode(worldNodeOnePtr);
@@ -155,8 +161,28 @@ int main(int argc, char** argv)
 	// again, so that the viewer knows to update its HomePosition setting
 	viewer.setCameraManipulator(viewer.getCameraManipulator());
 
+	collisionAvoidanceTask * caTaskPtr = dynamic_cast<collisionAvoidanceTask * >(sampleQpControllerPtr->getTask("collisionAvoidanceTask").get());
+	//caTaskPtr->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
+	caTaskPtr->initializeCollisionGroups(worldPtr, robotTwo);
+	//caTaskPtr->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("fixed_box_base"));
+	//caTaskPtr->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("floating_box_skeleton"));
+
+
+	if (dart::collision::CollisionDetector::getFactory()->canCreate("fcl"))
+	{
+		worldPtr->getConstraintSolver()->setCollisionDetector(
+				dart::collision::CollisionDetector::getFactory()->create("fcl"));
+	}
+
+	std::cout<<"The collision detector is set to: "<< worldPtr->getConstraintSolver()->getCollisionDetector()->getType()<<std::endl;
+	// Add the collision visualization:
+	viewer.addAttachment(new collisionPairVisual(
+                         caTaskPtr->getDistanceResult()));
+
 	// Begin running the application loop
 	viewer.run();
+
+
 }
 
 

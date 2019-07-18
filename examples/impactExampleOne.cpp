@@ -114,7 +114,8 @@ int main(int argc, char** argv)
 	worldNodeOnePtr->setNumStepsPerCycle(10);
 
 	// worldNodeOnePtr->setController(sampleControllerPtr);
-	worldNodeOnePtr->setController(sampleQpControllerPtr);
+	//worldNodeOnePtr->setController(sampleQpControllerPtr);
+	worldNodeOnePtr->addController("robotController", sampleQpControllerPtr);
 	// Create a Viewer and set it up with the WorldNode
 	dart::gui::osg::ImGuiViewer viewer;
 	viewer.addWorldNode(worldNodeOnePtr);

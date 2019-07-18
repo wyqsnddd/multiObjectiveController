@@ -55,13 +55,15 @@ class simpleWorldNode: public dart::gui::osg::WorldNode
 			// Use this function to execute custom code before each simulation time
 			// step is performed. This function can be deleted if it does not need
 			// to be used.
-			controllerPtr_->update();	
+			for (auto it = controllers_.begin(); it!=controllers_.end(); ++it)
+			{
+		 	  it->second->update();	
+			}
+			//controllerPtr_->update();	
+
+
 			/*
-			Eigen::VectorXd tau = controllerPtr_->computeTorques();
-			std::cout<<"Before simulation, the computed torque is: "<< tau<<std::endl;
-			getWorld()->getSkeleton(4)->setForces(tau);
-			std::cout<<"After simulation, the robot torque is: "<< getWorld()->getSkeleton(4)->getForces()<<std::endl;
-			//getWorld()->step();
+			getWorld()->step();
 			*/
 		}
 
@@ -72,14 +74,19 @@ class simpleWorldNode: public dart::gui::osg::WorldNode
 			// to be used.
 			// std::cout<<"After simulation, the robot torque is: "<< getWorld()->getSkeleton(4)->getForces()<<std::endl;
 		}
-
+		void addController(const std::string & name, metaController* inputControllerPtr) {
+			controllers_[name] = inputControllerPtr;
+		}
+		/*
 		void setController(metaController* inputControllerPtr) {
 			controllerPtr_ = inputControllerPtr;
 		}
+		*/
 	private:
 		//gravityCompensationController * controllerPtr_;
 		//gravityCompensationController * controllerPtr_;
-		metaController * controllerPtr_;
+		//metaController * controllerPtr_;
+		std::map<std::string, metaController * > controllers_;
 
 };
 
