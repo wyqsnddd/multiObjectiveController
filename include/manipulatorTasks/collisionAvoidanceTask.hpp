@@ -24,6 +24,7 @@
 # include <dart/collision/CollisionGroup.hpp> 
 #include <dart/collision/DistanceOption.hpp>
 
+# include <collision/collisionManager.hpp>
 class collisionAvoidanceTask: public metaManipulatorTask
 {
 
@@ -37,16 +38,21 @@ class collisionAvoidanceTask: public metaManipulatorTask
                double Kp
 	       )
   : metaManipulatorTask(skelPtr, configurationDataTree, weight, Kv, Kp){
-  
-    resultPtr_ = new dart::collision::DistanceResult();
+    //resultPtr_ = new dart::collision::DistanceResult();
     std::cout << "The collision avoidance task is created "<<std::endl; 
     //initializeCollisionGroups(robotPtr_);
   }
    void update() override;
+   void initializeCollisionManager(const dart::simulation::WorldPtr& world,
+		   const dart::dynamics::BodyNodePtr & bodyNode);
+
    void initializeCollisionGroups(
 		   const dart::simulation::WorldPtr& world,
+		   const dart::dynamics::SkeletonPtr & robotSkelPtr,
 		   const dart::dynamics::SkeletonPtr & obstacleSkelPtr);
-   void addObstacle(const dart::dynamics::SkeletonPtr & obstacleSkelPtr);
+   //void addObstacle(const dart::dynamics::SkeletonPtr & obstacleSkelPtr);
+
+   void addObstacle(const dart::dynamics::BodyNodePtr& BodyNodePtr);
   ~collisionAvoidanceTask() {}
 
   // Collision group of the robot and the other collision group
@@ -56,12 +62,19 @@ class collisionAvoidanceTask: public metaManipulatorTask
   {
     return collisionGroupsInitialized_; 
   }
+  /*
   inline const dart::collision::DistanceResult * getDistanceResult()
   {
     return resultPtr_; 
   }
+  */
+  inline const std::unique_ptr<collisionManager> & getCollisionManager()
+  {
+    return collisionManagerPtr_; 
+  }
  private:
   bool collisionGroupsInitialized_ = false;
 
-  dart::collision::DistanceResult * resultPtr_;
+  std::unique_ptr<collisionManager> collisionManagerPtr_;
+  //dart::collision::DistanceResult * resultPtr_;
 };
