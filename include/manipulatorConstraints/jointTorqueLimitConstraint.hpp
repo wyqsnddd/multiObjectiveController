@@ -33,40 +33,7 @@ public:
   jointTorqueLimitConstraint(const dart::dynamics::SkeletonPtr & skelPtr,
                              const int jointNumber,
                              bool lowerBoundIndicator,
-                             const double bound)
-  : dart::optimizer::Function()
-  {
-
-    robotPtr_ = skelPtr;
-    assert(robotPtr_ != nullptr);
-    bound_ = bound;
-
-    jointNumber_ = jointNumber;
-    lowerBoundIndicator_ = lowerBoundIndicator;
-
-    std::stringstream ss;
-    if(lowerBoundIndicator_)
-    {
-      // bound_ = robotPtr_->getForceLowerLimit(jointNumber_);
-      grad_ = Eigen::VectorXd(robotPtr_->getNumDofs());
-      grad_.setZero();
-      grad_(jointNumber_) = -1.0;
-      ss << "Joint_" << jointNumber_ << "_" << robotPtr_->getJoint(jointNumber_ + 1)->getName()
-         << "_torque_lower_limit_constraint";
-      setName(ss.str());
-    }
-    else
-    {
-      // bound_ = robotPtr_->getForceUpperLimit(jointNumber_);
-      grad_ = Eigen::VectorXd(robotPtr_->getNumDofs());
-      grad_.setZero();
-      grad_(jointNumber_) = 1.0;
-      ss << "Joint_" << jointNumber_ << "_" << robotPtr_->getJoint(jointNumber_ + 1)->getName()
-         << "_torque_upper_limit_constraint";
-      setName(ss.str());
-    }
-  }
-
+                             const double bound);
   ~jointTorqueLimitConstraint() {}
 
   /**
@@ -74,7 +41,7 @@ public:
    */
   void update() {}
 
-  virtual double eval(const Eigen::VectorXd & _x) override
+  inline virtual double eval(const Eigen::VectorXd & _x) override
   {
     Eigen::VectorXd Cg = robotPtr_->getCoriolisAndGravityForces();
 
@@ -100,7 +67,7 @@ public:
              - (bound_ - robotPtr_->getCoriolisAndGravityForces()[jointNumber_]);
     }
   }
-  virtual void evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) override
+  inline virtual void evalGradient(const Eigen::VectorXd & _x, Eigen::Map<Eigen::VectorXd> _grad) override
   {
     if(lowerBoundIndicator_)
     {
@@ -114,15 +81,14 @@ public:
   }
 
 private:
-  dart::dynamics::SkeletonPtr robotPtr_;
+  dart::dynamics::SkeletonPtr & robotPtr_;
 
   /**
    * Index from zero
    */
   int jointNumber_;
-
-  double bound_;
   bool lowerBoundIndicator_;
+  double bound_;
 
   Eigen::VectorXd grad_;
 };

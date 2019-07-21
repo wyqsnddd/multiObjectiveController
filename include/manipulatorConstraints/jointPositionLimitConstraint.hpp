@@ -48,7 +48,7 @@ public:
   }
 
 private:
-  dart::dynamics::SkeletonPtr robotPtr_;
+  dart::dynamics::SkeletonPtr & robotPtr_;
 
   /**
    * Index from zero

@@ -4,14 +4,9 @@
 jointPositionLimitConstraint::jointPositionLimitConstraint(const dart::dynamics::SkeletonPtr & skelPtr,
                                const int jointNumber,
                                const bool lowerBoundIndicator)
-  : dart::optimizer::Function()
+  : dart::optimizer::Function(), robotPtr_(skelPtr), jointNumber_(jointNumber), lowerBoundIndicator_(lowerBoundIndicator)
   {
 
-    robotPtr_ = skelPtr;
-    assert(robotPtr_ != nullptr);
-
-    jointNumber_ = jointNumber;
-    lowerBoundIndicator_ = lowerBoundIndicator;
 
     std::stringstream ss;
 
