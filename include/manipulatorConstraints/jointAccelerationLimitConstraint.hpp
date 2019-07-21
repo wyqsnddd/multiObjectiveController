@@ -59,7 +59,7 @@ public:
   }
 
 private:
-  dart::dynamics::SkeletonPtr & robotPtr_;
+  const dart::dynamics::SkeletonPtr & robotPtr_;
 
   /**
    * Index from zero

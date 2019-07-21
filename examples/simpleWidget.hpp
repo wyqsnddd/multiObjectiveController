@@ -48,7 +48,7 @@ class simpleWidget : public dart::gui::osg::ImGuiWidget
 		{
 			ImGui::SetNextWindowPos(ImVec2(10, 20));
 			if (!ImGui::Begin(
-						"QP Impact Controller",
+						"Multi-objective QP Controller",
 						nullptr,
 						ImVec2(240, 320),
 						0.5f,

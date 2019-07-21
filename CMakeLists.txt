@@ -24,7 +24,7 @@ enable_language(C)
 search_for_eigen()
 
 
-find_package(DART  REQUIRED COMPONENTS utils-urdf optimizer-nlopt gui-osg collision-bullet CONFIG)
+find_package(DART  REQUIRED COMPONENTS utils-urdf optimizer-nlopt gui-osg collision-bullet collision-ode CONFIG)
 find_package(Bullet REQUIRED)
 FIND_PACKAGE(Boost  COMPONENTS program_options REQUIRED )
 

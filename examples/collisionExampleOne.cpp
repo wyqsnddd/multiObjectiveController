@@ -36,7 +36,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 
-# include <utils/collisionPairVisual.hpp>
+# include <collision/collisionPairVisual.hpp>
 // Short alias for this namespace
 namespace pt = boost::property_tree;
 
@@ -62,31 +62,15 @@ int main(int argc, char** argv)
 		= dart::utils::SkelParser::readWorld("dart://sample/skel/impact_wall.skel");
 
 	assert(worldPtr != nullptr);
-	// Rotate and move the ground so that z is upwards
-	for (unsigned i = 0; i<worldPtr->getNumSkeletons(); i++){
-		//dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton("ground_skeleton");
-		dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton(i);
 
-		Eigen::Isometry3d temp_tf =
-			tempSkeletonPtr->getJoint(0)->getTransformFromParentBodyNode();
-
-		// temp_tf.pretranslate(Eigen::Vector3d(0,0,0.5));
-		temp_tf.rotate(Eigen::AngleAxisd(M_PI/2, Eigen::Vector3d(1,0,0)));
-		tempSkeletonPtr->getJoint(0)->setTransformFromParentBodyNode(temp_tf);
-
-	} 
+	 
 
 	// Load the robot
 
 	dart::utils::DartLoader loader;
-	dart::dynamics::SkeletonPtr robotTwo =
-		loader.parseSkeleton("dart://sample/urdf/KR5/KR5_sixx_R650.urdf");
-
 	dart::dynamics::SkeletonPtr robot =
 		loader.parseSkeleton("dart://sample/urdf/KR5/KR5_sixx_R650.urdf");
 
-	worldPtr->addSkeleton(robot);
-	worldPtr->addSkeleton(robotTwo);
 	// Set the colors of the models to obey the shape's color specification
 	for(std::size_t i=0; i<robot->getNumBodyNodes(); ++i)
 	{
@@ -100,12 +84,32 @@ int main(int argc, char** argv)
 				mesh->setColorMode(dart::dynamics::MeshShape::SHAPE_COLOR);
 		}
 	}
+	worldPtr->addSkeleton(robot);
+	dart::dynamics::SkeletonPtr robotTwo =
+		loader.parseSkeleton("dart://sample/urdf/KR5/KR5_sixx_R650.urdf");
+	worldPtr->addSkeleton(robotTwo);
+	
 
+	// Rotate and move the ground so that z is upwards
+	for (unsigned i = 0; i<worldPtr->getNumSkeletons(); i++){
+		//dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton("ground_skeleton");
+		dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton(i);
+
+		Eigen::Isometry3d temp_tf =
+			tempSkeletonPtr->getJoint(0)->getTransformFromParentBodyNode();
+
+		// temp_tf.pretranslate(Eigen::Vector3d(0,0,0.5));
+		temp_tf.rotate(Eigen::AngleAxisd(M_PI/2, Eigen::Vector3d(1,0,0)));
+		tempSkeletonPtr->getJoint(0)->setTransformFromParentBodyNode(temp_tf);
+
+	}
+	
 	// Rotate the robot so that z is upwards (default transform is not Identity)
-	robot->getJoint(0)->setTransformFromParentBodyNode(Eigen::Isometry3d::Identity());
+	//robot->getJoint(0)->setTransformFromParentBodyNode(Eigen::Isometry3d::Identity());
 
 	// Read the transform and set: 
-	auto robotTwoTransform = Eigen::Isometry3d::Identity();
+	auto robotTwoTransform = robotTwo->getJoint(0)->getTransformFromParentBodyNode();
+	Eigen::Isometry3d::Identity();
 	robotTwoTransform.translation().x() = 0.0; 
 	robotTwoTransform.translation().y() = 1.0; 
 	robotTwoTransform.translation().z() = 0.0; 
@@ -125,7 +129,7 @@ int main(int argc, char** argv)
 	// Wrap a WorldNode around it
 	osg::ref_ptr<simpleWorldNode> worldNodeOnePtr = new simpleWorldNode(worldPtr);
 	
-	worldNodeOnePtr->setNumStepsPerCycle(10);
+	worldNodeOnePtr->setNumStepsPerCycle(1);
 
 	// worldNodeOnePtr->setController(sampleControllerPtr);
 	//worldNodeOnePtr->setController(sampleQpControllerPtr);
@@ -162,8 +166,16 @@ int main(int argc, char** argv)
 	viewer.setCameraManipulator(viewer.getCameraManipulator());
 
 	collisionAvoidanceTask * caTaskPtr = dynamic_cast<collisionAvoidanceTask * >(sampleQpControllerPtr->getTask("collisionAvoidanceTask").get());
-	//caTaskPtr->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("wall"));
-	caTaskPtr->initializeCollisionGroups(worldPtr, robotTwo);
+	//caTaskPtr->initializeCollisionGroups(worldPtr, robot, worldPtr->getSkeleton("wall"));
+	//caTaskPtr->initializeCollisionGroups(worldPtr, robot, robotTwo);
+	caTaskPtr->initializeCollisionManager(worldPtr, robot->getBodyNode("shoulder"));
+	caTaskPtr->addObstacle(robotTwo->getBodyNode("shoulder"));
+	caTaskPtr->addObstacle(robotTwo->getBodyNode("bicep"));
+	caTaskPtr->addObstacle(robotTwo->getBodyNode("elbow"));
+	caTaskPtr->addObstacle(robotTwo->getBodyNode("forearm"));
+	//caTaskPtr->addObstacle(robotTwo->getBodyNode("palm"));
+	//caTaskPtr->addObstacle(robotTwo->getBodyNode(""));
+	//caTaskPtr->initializeCollisionGroups(worldPtr, robotTwo, worldPtr->getSkeleton("wall"));
 	//caTaskPtr->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("fixed_box_base"));
 	//caTaskPtr->initializeCollisionGroups(worldPtr, worldPtr->getSkeleton("floating_box_skeleton"));
 
@@ -175,9 +187,15 @@ int main(int argc, char** argv)
 	}
 
 	std::cout<<"The collision detector is set to: "<< worldPtr->getConstraintSolver()->getCollisionDetector()->getType()<<std::endl;
+
 	// Add the collision visualization:
+	/*
 	viewer.addAttachment(new collisionPairVisual(
                          caTaskPtr->getDistanceResult()));
+			 */
+	viewer.addAttachment(
+			caTaskPtr->getCollisionManager()->getMinVisual()
+			);
 
 	// Begin running the application loop
 	viewer.run();

@@ -60,20 +60,6 @@ int main(int argc, char** argv)
 		= dart::utils::SkelParser::readWorld("dart://sample/skel/impact_wall.skel");
 
 	assert(worldPtr != nullptr);
-	// Rotate and move the ground so that z is upwards
-	for (unsigned i = 0; i<worldPtr->getNumSkeletons(); i++){
-		//dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton("ground_skeleton");
-		dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton(i);
-
-		Eigen::Isometry3d temp_tf =
-			tempSkeletonPtr->getJoint(0)->getTransformFromParentBodyNode();
-
-		// temp_tf.pretranslate(Eigen::Vector3d(0,0,0.5));
-		temp_tf.rotate(Eigen::AngleAxisd(M_PI/2, Eigen::Vector3d(1,0,0)));
-		tempSkeletonPtr->getJoint(0)->setTransformFromParentBodyNode(temp_tf);
-
-	} 
-
 	// Load the robot
 
 	dart::utils::DartLoader loader;
@@ -95,8 +81,23 @@ int main(int argc, char** argv)
 		}
 	}
 
+	// Rotate and move the ground so that z is upwards
+	for (unsigned i = 0; i<worldPtr->getNumSkeletons(); i++){
+		//dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton("ground_skeleton");
+		dart::dynamics::SkeletonPtr tempSkeletonPtr = worldPtr->getSkeleton(i);
+
+		Eigen::Isometry3d temp_tf =
+			tempSkeletonPtr->getJoint(0)->getTransformFromParentBodyNode();
+
+		// temp_tf.pretranslate(Eigen::Vector3d(0,0,0.5));
+		temp_tf.rotate(Eigen::AngleAxisd(M_PI/2, Eigen::Vector3d(1,0,0)));
+		tempSkeletonPtr->getJoint(0)->setTransformFromParentBodyNode(temp_tf);
+
+	} 
+
+
 	// Rotate the robot so that z is upwards (default transform is not Identity)
-	robot->getJoint(0)->setTransformFromParentBodyNode(Eigen::Isometry3d::Identity());
+	//robot->getJoint(0)->setTransformFromParentBodyNode(Eigen::Isometry3d::Identity());
 
 	//gravityCompensationController * sampleControllerPtr = new gravityCompensationController(robot);
 	manipulatorQpController* sampleQpControllerPtr = new manipulatorQpController(robot, root);
@@ -111,7 +112,7 @@ int main(int argc, char** argv)
 	// Wrap a WorldNode around it
 	osg::ref_ptr<simpleWorldNode> worldNodeOnePtr = new simpleWorldNode(worldPtr);
 	
-	worldNodeOnePtr->setNumStepsPerCycle(10);
+	worldNodeOnePtr->setNumStepsPerCycle(1);
 
 	// worldNodeOnePtr->setController(sampleControllerPtr);
 	//worldNodeOnePtr->setController(sampleQpControllerPtr);

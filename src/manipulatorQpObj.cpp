@@ -28,7 +28,7 @@ void manipulatorQpObj::update()
 
   for(auto it = tasks_.begin(); it != tasks_.end(); ++it )
   {
-    std::cout << "Update task: " << it->first << std::endl;
+    //std::cout << "Update task: " << it->first << std::endl;
     it->second->update();
      // Sum the Q matrix
     addToQ_(it->second->getQ());

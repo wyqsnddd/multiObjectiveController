@@ -140,14 +140,14 @@ bool manipulatorQpController::update()
   objPtr_->update();
 
   solverOptimalityStatus_ = solverPtr_->solve();
-  std::cout << "The optimality status is: " << solverOptimalityStatus_ << std::endl;
+  //std::cout << "The optimality status is: " << solverOptimalityStatus_ << std::endl;
 
   if(solverOptimalityStatus_)
     optimalJointAcceleration_ = probPtr_->getOptimalSolution();
   else
     optimalJointAcceleration_.setZero();
 
-  std::cout << "The generated joint acceleration is: " << std::endl << optimalJointAcceleration_ << std::endl;
+  //std::cout << "The generated joint acceleration is: " << std::endl << optimalJointAcceleration_ << std::endl;
   jointControllerPtr_->update(optimalJointAcceleration_);
   return true;
 }

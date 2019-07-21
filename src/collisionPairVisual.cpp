@@ -1,4 +1,4 @@
-# include <utils/collisionPairVisual.hpp>
+# include <collision/collisionPairVisual.hpp>
 
 collisionPairVisual::collisionPairVisual(const dart::collision::DistanceResult * resultPtr ):  dart::gui::osg::ViewerAttachment(), resultPtr_(resultPtr)
 {
@@ -14,7 +14,7 @@ void collisionPairVisual::initialize()
   nodeOneFramePtr_ = std::make_shared<dart::dynamics::SimpleFrame>(
         dart::dynamics::Frame::World(), "cNodeOne");
 
-  double radius = 0.03;
+  double radius = 0.15;
 
   nodeOneFramePtr_->setShape(std::make_shared<dart::dynamics::SphereShape>(radius/4.0));
   nodeOneFramePtr_->getShape()->addDataVariance(dart::dynamics::Shape::DYNAMIC_COLOR);
@@ -51,6 +51,5 @@ void collisionPairVisual::refresh()
   nodeTwoPtr_->refresh();
   nodeTwoFramePtr_->getShape()->removeDataVariance(
           dart::dynamics::Shape::DYNAMIC_PRIMITIVE);
-
 
 }

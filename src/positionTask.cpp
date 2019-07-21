@@ -32,7 +32,7 @@ void positionTask::update()
   calcError(x);
   Eigen::Vector3d error = getError();
 
-  std::cout << "The position error is: " << error.transpose() << std::endl;
+  //std::cout << "The position error is: " << error.transpose() << std::endl;
 
   Eigen::Vector3d tempConstant = (dJv + Kv_ * Jv) * dq + Kp_ * error;
 

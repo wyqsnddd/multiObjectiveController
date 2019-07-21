@@ -54,7 +54,7 @@ void orientationTask::update()
 
   // newJacobian = quatScalarWeightingMatrix_*newJacobian;
   // constant = quatScalarWeightingMatrix_*constant;
-  std::cout << "The orientation task error is: " << tempQuatError.vec() << std::endl;
+  //std::cout << "The orientation task error is: " << tempQuatError.vec() << std::endl;
 
   // std::cout<<"The angular jacobian  is: "<<std::endl<<angularJac<<", the J_dot is:
   // "<<std::endl<<angularJac_d<<std::endl; std::cout<<"dq: "<<std::endl<<dq<<std::endl; std::cout<<"block_one:
