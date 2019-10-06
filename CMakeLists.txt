@@ -52,10 +52,39 @@ target_link_libraries(${PROJECT_NAME}
 	dart-optimizer-nlopt )
 set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
+install(TARGETS ${PROJECT_NAME}
+	EXPORT ${PROJECT_NAME}-export 
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/lib
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/lib
+	RUNTIME DESTINATION ${CMAKE_INSTALL_DIR}/bin
+	INCLUDES DESTINATION ${CMAKE_INSTALL_DIR}/includes
+	)
+
 #===============================================================================
 # Add sub-directories
 #===============================================================================
 
 add_subdirectory(examples)
+
+
+#===============================================================================
+# Install 
+#===============================================================================
+
+install(EXPORT ${PROJECT_NAME}-export
+	FILE
+	${PROJECT_NAME}Targets.cmake	
+	NAMESPACE
+	${PROJECT_NAME}::
+	DESTINATION	
+	${CMAKE_INSTALL_LIBDIR}/cmake
+	)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/${PROJECT_NAME}Config.cmake.in ${PROJECT_NAME}Config.cmake )
+
+install(FILES
+	"${CMAKE_CURRENT_BINARY_DIR}/config/${PROJECT_NAME}Config.cmake"
+	DESTINATION lib/cmake/${PROJECT_NAME}	
+	)
 
 setup_project_finalize()

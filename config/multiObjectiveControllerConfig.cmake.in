@@ -1,0 +1,9 @@
+include(CMakeFindDependencyMacro)
+
+find_dependency(Bullet)
+find_dependency(Boost  REQUIRED COMPONENTS program_options )
+find_dependency(DART  REQUIRED COMPONENTS utils-urdf optimizer-nlopt gui-osg collision-bullet collision-ode )
+
+
+include("${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake")
+
